@@ -1,0 +1,17 @@
+import { model } from 'mongoose'
+import { addMongooseTypeOptions, toMongooseSchema, toZodMongooseSchema } from 'mongoose-zod'
+
+import type { I<%- NAME_CAPITAL %> } from '~/types'
+import { I<%- NAME_CAPITAL %>Schema, IScope } from '~/types'
+
+export const I<%- NAME_CAPITAL %>MongooseSchema = toMongooseSchema(
+  addMongooseTypeOptions(
+    toZodMongooseSchema(I<%- NAME_CAPITAL %>Schema),
+    {
+      validateBeforeSave: true,
+    }))
+
+export const I<%- NAME_CAPITAL %>Model = model<I<%- NAME_CAPITAL %>>(
+  IScope.<%- NAME_UPPER %>,
+  I<%- NAME_CAPITAL %>MongooseSchema,
+)
