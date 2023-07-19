@@ -5,8 +5,6 @@ import * as process from 'node:process'
 import * as p from '@clack/prompts'
 import * as changeCase from 'change-case'
 import template from 'lodash.template'
-import color from 'picocolors'
-import { consola } from 'consola'
 
 import { PromptError } from './errors'
 
@@ -15,16 +13,7 @@ import type { Params } from './types'
 const SRC_ROOT = path.resolve(process.env.TEMPLATER_SRC_ROOT || './src')
 const TEMPLATES_ROOT = path.resolve(process.env.TEMPLATER_TEMPLATES_ROOT || './templates')
 
-const logger = consola.withDefaults({
-  tag: 'templater',
-})
-
-p.intro(color.bgCyan(color.black(' Project generator ')))
-main()
-  .catch(logger.error)
-  .finally(() => p.outro(color.bgGreen(color.black(' Done '))))
-
-async function main() {
+export async function run() {
   const input = await p.group({
     path: () => p.text({
       message: 'Enter the path:',
