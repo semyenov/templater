@@ -1,45 +1,41 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import * as process from 'node:process'
 
+import * as glob from 'glob'
 import * as p from '@clack/prompts'
 import * as changeCase from 'change-case'
 import template from 'lodash.template'
 
+import { SRC_ROOT, TEMPLATES_ROOT } from './constants'
 import { PromptError } from './errors'
+import { loadConfig } from './config'
 
+import type { ConfigVariables } from './config'
 import type { Params } from './types'
 
-const SRC_ROOT = path.resolve(process.env.TEMPLATER_SRC_ROOT || './src')
-const TEMPLATES_ROOT = path.resolve(process.env.TEMPLATER_TEMPLATES_ROOT || './templates')
-
 export async function run() {
-  const input = await p.group({
-    path: () => p.text({
-      message: 'Enter the path:',
-      placeholder: 'server/models',
-      initialValue: 'server/models',
-      defaultValue: '',
-    }),
-
-    name: () => p.text({
-      message: 'Enter the name:',
-      placeholder: 'meta',
-      initialValue: 'meta',
-      defaultValue: '',
-    }),
+  const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, { })
+  const template = await p.select({
+    message: 'Choose template:',
+    options: templates.map(template => ({
+      label: formatTemplatePath(template),
+      value: template,
+    })),
+    initialValue: 'server.models.yml',
   })
-
-  if (
-    input.path === ''
-    || input.name === ''
-    || p.isCancel(input.path)
-    || p.isCancel(input.name)
-  )
+  if (template === '' || p.isCancel(template))
     return
 
-  for (const template of fs.readdirSync(path.join(TEMPLATES_ROOT, input.path))) {
-    await generate({ ...input, template })
+  const config = loadConfig(template)
+  const variables = await promptVariables(config.variables)
+
+  for (const { name, content } of config.files) {
+    await generate({
+      template,
+      name,
+      content,
+      variables,
+    })
       .then(({ file, content }) => fs.writeFileSync(file, content))
       .catch((err) => {
         if (err instanceof PromptError)
@@ -50,20 +46,16 @@ export async function run() {
   }
 }
 
-async function generate(params: Params): Promise<{ file: string; content: string }> {
-  const templateContent = fs.readFileSync(path.join(
-    TEMPLATES_ROOT,
-    params.path,
-    params.template,
-  ), 'utf-8')
-
+async function generate(
+  params: Params,
+): Promise<{ file: string; content: string }> {
+  const replaceMap = formatParams(params.variables)
+  const nameTemplater = template(params.name)
+  const contentTemplater = template(params.content)
   const outPath = path.join(
     SRC_ROOT,
-    params.path,
-    params.name,
-    params.template
-      .slice(0, params.template.lastIndexOf('.'))
-      .replace(/\[name\]/g, params.name),
+    formatTemplatePath(params.template),
+    nameTemplater(replaceMap),
   )
 
   if (!fs.existsSync(path.dirname(outPath)))
@@ -76,33 +68,51 @@ async function generate(params: Params): Promise<{ file: string; content: string
       active: 'yes',
       inactive: 'no',
     })
-    if (
-      !overwrite
-      || p.isCancel(overwrite)
-    )
+    if (!overwrite || p.isCancel(overwrite))
       throw new PromptError('Canceled')
   }
 
-  const replaceMap = createReplaceMap(params)
-  const templater = template(templateContent)
-
   return {
     file: outPath,
-    content: templater(replaceMap),
+    content: contentTemplater(replaceMap),
   }
 }
 
-function createReplaceMap(params: Params) {
-  return {
-    NAME: params.name,
-    PATH: params.path,
+export async function promptVariables(variables: ConfigVariables[]) {
+  const variablesPromptsGroup: p.PromptGroup<Record<string, string>> = {}
 
-    NAME_DOT: changeCase.dotCase(params.name),
-    NAME_KEBAB: changeCase.paramCase(params.name),
-    NAME_CAMEL: changeCase.camelCase(params.name),
-    NAME_PASCAL: changeCase.pascalCase(params.name),
-    NAME_CAPITAL: changeCase.capitalCase(params.name, { delimiter: '' }),
-    NAME_UPPER: changeCase.constantCase(params.name),
-    NAME_LOWER: changeCase.snakeCase(params.name),
+  for (const variable of variables) {
+    variablesPromptsGroup[variable.name] = async () => {
+      const val = await p.text(variable)
+      if (!p.isCancel(val))
+        return val
+    }
   }
+
+  return p.group(variablesPromptsGroup)
+}
+
+function formatParams<T extends Record<string, string>>(
+  params: T,
+): Record<string, string> {
+  const replaceMap: Record<string, string> = {}
+  for (const [key, value] of Object.entries(params)) {
+    const k = changeCase.constantCase(key)
+    replaceMap[`${k}`] = value
+    replaceMap[`${k}_DOT`] = changeCase.dotCase(value)
+    replaceMap[`${k}_KEBAB`] = changeCase.paramCase(value)
+    replaceMap[`${k}_CAMEL`] = changeCase.camelCase(value)
+    replaceMap[`${k}_PASCAL`] = changeCase.pascalCase(value)
+    replaceMap[`${k}_CAPITAL`] = changeCase.capitalCase(value, {
+      delimiter: '',
+    })
+    replaceMap[`${k}_SNAKE`] = changeCase.snakeCase(value)
+    replaceMap[`${k}_UPPER`] = changeCase.constantCase(value)
+  }
+
+  return replaceMap
+}
+
+function formatTemplatePath(template: string): string {
+  return changeCase.pathCase(path.parse(template).name)
 }

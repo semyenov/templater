@@ -821,6 +821,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.1.0
     "@rollup/plugin-typescript": ^11.1.2
     "@types/esm": ^3.2.0
+    "@types/js-yaml": ^4
     "@types/lodash.template": ^4.5.1
     "@types/node": ^20.4.2
     "@types/rollup-plugin-peer-deps-external": ^2.2.1
@@ -828,6 +829,7 @@ __metadata:
     "@typescript-eslint/parser": ^6.1.0
     change-case: ^4.1.2
     consola: ^3.2.3
+    dotenv: ^16.3.1
     esbuild: ^0.18.14
     eslint: ^8.45.0
     eslint-import-resolver-node: ^0.3.7
@@ -846,6 +848,8 @@ __metadata:
     eslint-plugin-vue: ^9.15.1
     eslint-plugin-yml: ^1.8.0
     esno: ^0.17.0
+    glob: ^10.3.3
+    js-yaml: ^4.1.0
     jsonc-eslint-parser: ^2.3.0
     lint-staged: ^13.2.3
     lodash.template: ^4.5.0
@@ -861,6 +865,7 @@ __metadata:
     typescript-json-schema: ^0.59.0
     vue-eslint-parser: ^9.3.1
     yaml-eslint-parser: ^1.2.2
+    zod: ^3.21.4
   bin:
     templater: bin/templater-cli.mjs
   languageName: unknown
@@ -921,6 +926,13 @@ __metadata:
   version: 0.0.39
   resolution: "@types/estree@npm:0.0.39"
   checksum: 412fb5b9868f2c418126451821833414189b75cc6bf84361156feed733e3d92ec220b9d74a89e52722e03d5e241b2932732711b7497374a404fad49087adc248
+  languageName: node
+  linkType: hard
+
+"@types/js-yaml@npm:^4":
+  version: 4.0.5
+  resolution: "@types/js-yaml@npm:4.0.5"
+  checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
   languageName: node
   linkType: hard
 
@@ -2021,6 +2033,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.3.1":
+  version: 16.3.1
+  resolution: "dotenv@npm:16.3.1"
+  checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
+  languageName: node
+  linkType: hard
+
 "eastasianwidth@npm:^0.2.0":
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
@@ -3082,7 +3101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.3":
   version: 10.3.3
   resolution: "glob@npm:10.3.3"
   dependencies:
@@ -6059,5 +6078,12 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.21.4":
+  version: 3.21.4
+  resolution: "zod@npm:3.21.4"
+  checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
   languageName: node
   linkType: hard

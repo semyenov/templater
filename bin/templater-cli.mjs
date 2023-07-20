@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 import * as p from '@clack/prompts'
-
-import { run } from '../dist/esm/index.mjs'
-
 import { consola } from 'consola'
 import color from 'picocolors'
+
+import { run } from '../dist/esm/index.mjs'
 
 const logger = consola.withDefaults({
   tag: 'templater',

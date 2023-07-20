@@ -1,5 +1,6 @@
 export interface Params {
-  name: string
-  path: string
   template: string
+  name: string
+  content: string
+  variables: Record<string, string>
 }
