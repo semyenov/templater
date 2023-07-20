@@ -8,7 +8,7 @@ const ConfigVariableSchema = z.object({
   message: z.string(),
   placeholder: z.string().optional(),
   initialValue: z.string().optional(),
-  defaultValue: z.string(),
+  defaultValue: z.string().optional(),
 })
 export type ConfigVariables = z.infer<typeof ConfigVariableSchema>
 

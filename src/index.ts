@@ -106,7 +106,7 @@ function formatParams<T extends Record<string, string>>(
     replaceMap[`${k}_CAPITAL`] = changeCase.capitalCase(value, {
       delimiter: '',
     })
-    replaceMap[`${k}_SNAKE`] = changeCase.snakeCase(value)
+    replaceMap[`${k}_LOWER`] = changeCase.snakeCase(value)
     replaceMap[`${k}_UPPER`] = changeCase.constantCase(value)
   }
 

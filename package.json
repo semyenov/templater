@@ -7,12 +7,12 @@
   "description": "Templater CLI",
   "author": "Alexander Semyenov <semyenov@hotmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/semyenov/ts-starter#readme",
+  "homepage": "https://github.com/semyenov/templater#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/semyenov/ts-starter.git"
+    "url": "git+https://github.com/semyenov/templater.git"
   },
-  "bugs": "https://github.com/semyenov/ts-starter/issues",
+  "bugs": "https://github.com/semyenov/templater/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {

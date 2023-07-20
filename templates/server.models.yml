@@ -10,7 +10,7 @@ variables:
     defaultValue: ""
 
 files:
-  - name: "<%- NAME_SNAKE %>/<%- NAME_DOT %>.ts"
+  - name: "<%- NAME_LOWER %>/<%- NAME_DOT %>.ts"
     content: |
       // <%- COMMENT %>
 
@@ -32,6 +32,6 @@ files:
         I<%- NAME_CAPITAL %>MongooseSchema,
       )
 
-  - name: "<%- NAME_SNAKE %>/<%- NAME_CAPITAL %>.d.ts"
+  - name: "<%- NAME_LOWER %>/<%- NAME_CAPITAL %>.d.ts"
     content: |
       import { I<%- NAME_CAPITAL %> } from '~/types'
