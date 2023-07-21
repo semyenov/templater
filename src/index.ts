@@ -2,53 +2,43 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 
 import * as glob from 'glob'
-import * as p from '@clack/prompts'
 import * as changeCase from 'change-case'
 import template from 'lodash.template'
 
 import { SRC_ROOT, TEMPLATES_ROOT } from './constants'
-import { PromptError } from './errors'
+import { PromptError, PromptManager } from './prompt'
 import { loadConfig } from './config'
+import { formatTemplatePath } from './utils'
 
-import type { ConfigVariables } from './config'
 import type { Params } from './types'
 
 export async function run() {
-  const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, { })
-  const template = await p.select({
-    message: 'Choose template:',
-    options: templates.map(template => ({
-      label: formatTemplatePath(template),
-      value: template,
-    })),
-    initialValue: 'server.models.yml',
-  })
-  if (template === '' || p.isCancel(template))
-    return
+  const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, {})
+  const template = await PromptManager.promptTemplate(templates)
 
   const config = loadConfig(template)
-  const variables = await promptVariables(config.variables)
+  const variables = await PromptManager.promptVariables(config.variables)
 
-  for (const { name, content } of config.files) {
-    await generate({
-      template,
-      name,
-      content,
-      variables,
-    })
-      .then(({ file, content }) => fs.writeFileSync(file, content))
-      .catch((err) => {
-        if (err instanceof PromptError)
-          return
-
-        throw err
+  for (const file of config.files) {
+    try {
+      const res = await generate({
+        ...file,
+        template,
+        variables,
       })
+      if (res)
+        fs.writeFileSync(res.file, res.content)
+    }
+    catch (err) {
+      if (!(err instanceof PromptError))
+        throw err
+    }
   }
 }
 
 async function generate(
   params: Params,
-): Promise<{ file: string; content: string }> {
+): Promise<{ file: string; content: string } | null> {
   const replaceMap = formatParams(params.variables)
   const nameTemplater = template(params.name)
   const contentTemplater = template(params.content)
@@ -58,18 +48,12 @@ async function generate(
     nameTemplater(replaceMap),
   )
 
-  if (!fs.existsSync(path.dirname(outPath)))
-    fs.mkdirSync(path.dirname(outPath), { recursive: true })
+  fs.mkdirSync(path.dirname(outPath), { recursive: true })
 
   if (fs.existsSync(outPath)) {
-    const overwrite = await p.confirm({
-      message: `Overwrite ${outPath}?`,
-      initialValue: false,
-      active: 'yes',
-      inactive: 'no',
-    })
-    if (!overwrite || p.isCancel(overwrite))
-      throw new PromptError('Canceled')
+    const overwrite = await PromptManager.promptOverwrite(outPath)
+    if (!overwrite)
+      return null
   }
 
   return {
@@ -78,41 +62,30 @@ async function generate(
   }
 }
 
-export async function promptVariables(variables: ConfigVariables[]) {
-  const variablesPromptsGroup: p.PromptGroup<Record<string, string>> = {}
-
-  for (const variable of variables) {
-    variablesPromptsGroup[variable.name] = async () => {
-      const val = await p.text(variable)
-      if (!p.isCancel(val))
-        return val
-    }
-  }
-
-  return p.group(variablesPromptsGroup)
-}
-
 function formatParams<T extends Record<string, string>>(
   params: T,
 ): Record<string, string> {
   const replaceMap: Record<string, string> = {}
-  for (const [key, value] of Object.entries(params)) {
+
+  Object.entries(params).forEach(([key, value]) => {
     const k = changeCase.constantCase(key)
-    replaceMap[`${k}`] = value
-    replaceMap[`${k}_DOT`] = changeCase.dotCase(value)
-    replaceMap[`${k}_KEBAB`] = changeCase.paramCase(value)
-    replaceMap[`${k}_CAMEL`] = changeCase.camelCase(value)
-    replaceMap[`${k}_PASCAL`] = changeCase.pascalCase(value)
-    replaceMap[`${k}_CAPITAL`] = changeCase.capitalCase(value, {
-      delimiter: '',
-    })
-    replaceMap[`${k}_LOWER`] = changeCase.snakeCase(value)
-    replaceMap[`${k}_UPPER`] = changeCase.constantCase(value)
-  }
+    const dotCaseValue = changeCase.dotCase(value)
+    const paramCaseValue = changeCase.paramCase(value)
+    const camelCaseValue = changeCase.camelCase(value)
+    const pascalCaseValue = changeCase.pascalCase(value)
+    const capitalCaseValue = changeCase.capitalCase(value, { delimiter: '' })
+    const snakeCaseValue = changeCase.snakeCase(value)
+    const constantCaseValue = changeCase.constantCase(value)
+
+    replaceMap[k] = value
+    replaceMap[`${k}_DOT`] = dotCaseValue
+    replaceMap[`${k}_KEBAB`] = paramCaseValue
+    replaceMap[`${k}_CAMEL`] = camelCaseValue
+    replaceMap[`${k}_PASCAL`] = pascalCaseValue
+    replaceMap[`${k}_CAPITAL`] = capitalCaseValue
+    replaceMap[`${k}_LOWER`] = snakeCaseValue
+    replaceMap[`${k}_UPPER`] = constantCaseValue
+  })
 
   return replaceMap
-}
-
-function formatTemplatePath(template: string): string {
-  return changeCase.pathCase(path.parse(template).name)
 }
