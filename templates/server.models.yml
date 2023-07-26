@@ -10,29 +10,29 @@ variables:
     defaultValue: ""
 
 files:
-  - name: "<%- NAME_LOWER %>/<%- NAME_DOT %>.ts"
+  - name: "{{snakeCase NAME}}/{{dotCase NAME}}.ts"
     content: |
-      // <%- COMMENT %>
+      // {{COMMENT}}
 
       import { model } from 'mongoose'
       import { addMongooseTypeOptions, toMongooseSchema, toZodMongooseSchema } from 'mongoose-zod'
 
-      import type { I<%- NAME_CAPITAL %> } from '~/types'
-      import { I<%- NAME_CAPITAL %>Schema, IScope } from '~/types'
+      import type { I{{capitalCase NAME}} } from '~/types'
+      import { I{{capitalCase NAME}}Schema, IScope } from '~/types'
 
-      export const I<%- NAME_CAPITAL %>MongooseSchema = toMongooseSchema(
+      export const I{{capitalCase NAME}}MongooseSchema = toMongooseSchema(
         addMongooseTypeOptions(
-          toZodMongooseSchema(I<%- NAME_CAPITAL %>Schema),
+          toZodMongooseSchema(I{{capitalCase NAME}}Schema),
           {
             // TODO: write mongoose-zod schema options
             validateBeforeSave: true,
           }))
 
-      export const I<%- NAME_CAPITAL %>Model = model<I<%- NAME_CAPITAL %>>(
-        IScope.<%- NAME_UPPER %>,
-        I<%- NAME_CAPITAL %>MongooseSchema,
+      export const I{{capitalCase NAME}}Model = model<I{{capitalCase NAME}}>(
+        IScope.{{constantCase NAME}},
+        I{{capitalCase NAME}}MongooseSchema,
       )
 
-  - name: "<%- NAME_LOWER %>/<%- NAME_CAPITAL %>.d.ts"
+  - name: "{{snakeCase NAME}}/{{capitalCase NAME}}.d.ts"
     content: |
-      import { I<%- NAME_CAPITAL %> } from '~/types'
+      import { I{{capitalCase NAME}} } from '~/types'

@@ -3,7 +3,7 @@ import * as path from 'node:path'
 
 import * as glob from 'glob'
 import * as changeCase from 'change-case'
-import template from 'lodash.template'
+import t from 'handlebars'
 
 import { SRC_ROOT, TEMPLATES_ROOT } from './constants'
 import { PromptError, PromptManager } from './prompt'
@@ -11,6 +11,14 @@ import { loadConfig } from './config'
 import { formatTemplatePath } from './utils'
 
 import type { Params } from './types'
+
+t.registerHelper('dotCase', (value: string) => changeCase.dotCase(value))
+t.registerHelper('paramCase', (value: string) => changeCase.paramCase(value))
+t.registerHelper('camelCase', (value: string) => changeCase.camelCase(value))
+t.registerHelper('pascalCase', (value: string) => changeCase.pascalCase(value))
+t.registerHelper('capitalCase', (value: string) => changeCase.capitalCase(value, { delimiter: '' }))
+t.registerHelper('snakeCase', (value: string) => changeCase.snakeCase(value))
+t.registerHelper('constantCase', (value: string) => changeCase.constantCase(value))
 
 export async function run() {
   const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, {})
@@ -39,13 +47,12 @@ export async function run() {
 async function generate(
   params: Params,
 ): Promise<{ file: string; content: string } | null> {
-  const replaceMap = formatParams(params.variables)
-  const nameTemplater = template(params.name)
-  const contentTemplater = template(params.content)
+  const nameTemplater = t.compile(params.name)
+  const contentTemplater = t.compile(params.content)
   const outPath = path.join(
     SRC_ROOT,
     formatTemplatePath(params.template),
-    nameTemplater(replaceMap),
+    nameTemplater(params.variables),
   )
 
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
@@ -58,34 +65,6 @@ async function generate(
 
   return {
     file: outPath,
-    content: contentTemplater(replaceMap),
+    content: contentTemplater(params.variables),
   }
-}
-
-function formatParams<T extends Record<string, string>>(
-  params: T,
-): Record<string, string> {
-  const replaceMap: Record<string, string> = {}
-
-  Object.entries(params).forEach(([key, value]) => {
-    const k = changeCase.constantCase(key)
-    const dotCaseValue = changeCase.dotCase(value)
-    const paramCaseValue = changeCase.paramCase(value)
-    const camelCaseValue = changeCase.camelCase(value)
-    const pascalCaseValue = changeCase.pascalCase(value)
-    const capitalCaseValue = changeCase.capitalCase(value, { delimiter: '' })
-    const snakeCaseValue = changeCase.snakeCase(value)
-    const constantCaseValue = changeCase.constantCase(value)
-
-    replaceMap[k] = value
-    replaceMap[`${k}_DOT`] = dotCaseValue
-    replaceMap[`${k}_KEBAB`] = paramCaseValue
-    replaceMap[`${k}_CAMEL`] = camelCaseValue
-    replaceMap[`${k}_PASCAL`] = pascalCaseValue
-    replaceMap[`${k}_CAPITAL`] = capitalCaseValue
-    replaceMap[`${k}_LOWER`] = snakeCaseValue
-    replaceMap[`${k}_UPPER`] = constantCaseValue
-  })
-
-  return replaceMap
 }
