@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@sozdev/templater",
   "type": "module",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "packageManager": "yarn@3.5.1",
   "description": "Templater CLI",
   "author": "Alexander Semyenov <semyenov@hotmail.com>",

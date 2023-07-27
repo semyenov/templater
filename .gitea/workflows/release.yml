@@ -26,6 +26,9 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Apply version
+        run: yarn version apply
+
       - name: Publish
         run: yarn npm publish
         env:
