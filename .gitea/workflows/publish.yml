@@ -19,11 +19,6 @@ jobs:
         with:
           node-version: latest
           cache: yarn
-          cache-dependency-path: "**/yarn.lock"
-
-      - name: Install and configure Yarn Berry
-        run: |
-          corepack enable
 
       - name: Install dependencies
         run: yarn install
