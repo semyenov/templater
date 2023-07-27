@@ -15,46 +15,39 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-
       - name: Set node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: pnpm
 
-      - name: Setup
-        run: npm i -g @antfu/ni
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Install
-        run: nci
+        run: yarn
 
       - name: Lint
-        run: nr lint
+        run: yarn lint
 
   typecheck:
     runs-on: local
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-
       - name: Set node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: pnpm
 
-      - name: Setup
-        run: npm i -g @antfu/ni
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Install
-        run: nci
+        run: yarn
 
       - name: Typecheck
-        run: nr typecheck
+        run: yarn typecheck
 
   test:
     runs-on: ${{ matrix.os }}
