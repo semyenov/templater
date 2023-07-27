@@ -27,4 +27,4 @@ jobs:
       - name: Generate changelog
         run: yarn dlx changelogithub
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITEA_TOKEN}}
