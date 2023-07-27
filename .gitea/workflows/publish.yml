@@ -12,16 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2 # This step checks out a copy of your repository
+      - uses: actions/checkout@v3 # This step checks out a copy of your repository
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 16 # This step sets up a Node.js environment. Change to the version you want.
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+          node-version: 18 # This step sets up a Node.js environment. Change to the version you want.
 
       - name: Cache install files and yarn cache
         uses: actions/cache@v3
@@ -30,16 +26,14 @@ jobs:
           # IMPORTANT: both node_modules and the yarn cache are part of our cache
           path: |
             **/node_modules
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            **/.yarn/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install and configure Yarn Berry
         run: |
-          yarn set version berry
-          echo "nodeLinker: node-modules" >> .yarnrc.yml
-          echo "save-prefix: \"^\"" >> .yarnrc.yml
+          corepack enable
 
       - name: Install dependencies
         run: |
