@@ -11,7 +11,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: local
     steps:
       - uses: actions/checkout@v3
 
@@ -34,7 +34,7 @@ jobs:
         run: nr lint
 
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: local
     steps:
       - uses: actions/checkout@v3
 
@@ -62,7 +62,7 @@ jobs:
     strategy:
       matrix:
         node: [16.x, 18.x]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [local, windows-latest, macos-latest]
       fail-fast: false
 
     steps:
