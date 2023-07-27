@@ -42,7 +42,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
-      - name: Install
+      - name: Install dependencies
         run: yarn
 
       - name: Typecheck
