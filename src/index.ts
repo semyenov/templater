@@ -2,27 +2,18 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 
 import * as glob from 'glob'
-import * as changeCase from 'change-case'
-import t from 'handlebars'
+import template from 'lodash.template'
 
 import { SRC_ROOT, TEMPLATES_ROOT } from './constants'
 import { PromptError, PromptManager } from './prompt'
 import { loadConfig } from './config'
-import { formatTemplatePath } from './utils'
+import * as utils from './utils'
 
 import type { Params } from './types'
 
-t.registerHelper('dotCase', (value: string) => changeCase.dotCase(value))
-t.registerHelper('paramCase', (value: string) => changeCase.paramCase(value))
-t.registerHelper('camelCase', (value: string) => changeCase.camelCase(value))
-t.registerHelper('pascalCase', (value: string) => changeCase.pascalCase(value))
-t.registerHelper('capitalCase', (value: string) => changeCase.capitalCase(value, { delimiter: '' }))
-t.registerHelper('snakeCase', (value: string) => changeCase.snakeCase(value))
-t.registerHelper('constantCase', (value: string) => changeCase.constantCase(value))
-
 export async function run() {
   const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, {})
-  const template = await PromptManager.promptTemplate(templates)
+  const template = await PromptManager.promptSelectString(templates)
 
   const config = loadConfig(template)
   const variables = await PromptManager.promptVariables(config.variables)
@@ -47,12 +38,15 @@ export async function run() {
 async function generate(
   params: Params,
 ): Promise<{ file: string; content: string } | null> {
-  const nameTemplater = t.compile(params.name)
-  const contentTemplater = t.compile(params.content)
+  const replaceMap = formatParams(params.variables)
+
+  const nameTemplater = template(params.name)
+  const contentTemplater = template(params.content)
+
   const outPath = path.join(
     SRC_ROOT,
-    formatTemplatePath(params.template),
-    nameTemplater(params.variables),
+    utils.pathCase(params.template),
+    nameTemplater(replaceMap),
   )
 
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
@@ -67,4 +61,26 @@ async function generate(
     file: outPath,
     content: contentTemplater(params.variables),
   }
+}
+
+function formatParams<T extends Record<string, string>>(
+  params: T,
+): Record<string, string> {
+  const replaceMap: Record<string, string> = {}
+
+  Object.entries(params).forEach(([key, value]) => {
+    const k = utils.constantCase(key)
+    const v = value
+
+    replaceMap[k] = v
+    replaceMap[`${k}_DOT`] = utils.dotCase(v)
+    replaceMap[`${k}_KEBAB`] = utils.paramCase(v)
+    replaceMap[`${k}_CAMEL`] = utils.camelCase(v)
+    replaceMap[`${k}_PASCAL`] = utils.pascalCase(v)
+    replaceMap[`${k}_CAPITAL`] = utils.capitalCase(v)
+    replaceMap[`${k}_LOWER`] = utils.snakeCase(v)
+    replaceMap[`${k}_UPPER`] = utils.constantCase(v)
+  })
+
+  return replaceMap
 }

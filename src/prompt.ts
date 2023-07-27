@@ -1,6 +1,6 @@
 import * as p from '@clack/prompts'
 
-import { formatTemplatePath } from './utils'
+import * as utils from './utils'
 
 import type { ConfigVariables } from './config'
 
@@ -30,29 +30,29 @@ export class PromptManager {
     throw new PromptError('Canceled')
   }
 
-  static async promptTemplate(templates: string[]): Promise<string> {
+  static async promptSelectString<T extends string>(strings: T[]): Promise<T> {
     return this.promptSelect({
       message: 'Choose template:',
-      options: templates.map(template => ({
-        label: formatTemplatePath(template),
+      options: strings.map(template => ({
+        label: utils.pathCase(template),
         value: template,
       })),
-      initialValue: 'server.models.yml',
-    })
+      initialValue: strings[0],
+    }) as Promise<T>
   }
 
-  static async promptVariables(variables: ConfigVariables[]) {
-    const variablesPromptsGroup: p.PromptGroup<Record<string, string>> = {}
+  static async promptVariables<K extends ConfigVariables, T extends K['name']>(variables: K[]) {
+    const variablesPromptsGroup = {} as p.PromptGroup<Record<T, string>>
 
-    for (const variable of variables) {
-      variablesPromptsGroup[variable.name] = async () => {
+    variables.forEach(async (variable) => {
+      variablesPromptsGroup[variable.name as T] = async () => {
         const val = await p.text(variable)
         if (!p.isCancel(val))
           return val
 
         throw new PromptError('Canceled')
       }
-    }
+    })
 
     return p.group(variablesPromptsGroup)
   }
