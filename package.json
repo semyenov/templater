@@ -37,7 +37,9 @@
     "dist",
     "bin"
   ],
-  "bin": "bin/templater-cli.mjs",
+  "bin": {
+    "templater": "bin/templater-cli.mjs"
+  },
   "scripts": {
     "dev": "esno src/index.ts",
     "build": "rollup --configPlugin typescript --config rollup.config.ts",
