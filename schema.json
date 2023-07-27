@@ -1,52 +1,52 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-        "{name?:string;content?:string;}": {
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            },
-            "type": "object"
-        },
-        "{name?:string;message?:string;placeholder?:string;initialValue?:string;defaultValue?:string;}": {
-            "properties": {
-                "defaultValue": {
-                    "type": "string"
-                },
-                "initialValue": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "placeholder": {
-                    "type": "string"
-                }
-            },
-            "type": "object"
-        }
-    },
-    "properties": {
-        "files": {
-            "items": {
-                "$ref": "#/definitions/{name?:string;content?:string;}"
-            },
-            "type": "array"
-        },
-        "variables": {
-            "items": {
-                "$ref": "#/definitions/{name?:string;message?:string;placeholder?:string;initialValue?:string;defaultValue?:string;}"
-            },
-            "type": "array"
-        }
-    },
-    "type": "object"
-}
+  "$schema": "http://json-schema.org/draft-07/schema#",
 
+  "definitions": {
+    "{name?:string;content?:string;}": {
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "{name?:string;message?:string;placeholder?:string;initialValue?:string;defaultValue?:string;}": {
+      "properties": {
+        "defaultValue": {
+          "type": "string"
+        },
+        "initialValue": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "files": {
+      "items": {
+        "$ref": "#/definitions/{name?:string;content?:string;}"
+      },
+      "type": "array"
+    },
+    "variables": {
+      "items": {
+        "$ref": "#/definitions/{name?:string;message?:string;placeholder?:string;initialValue?:string;defaultValue?:string;}"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}
