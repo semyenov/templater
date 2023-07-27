@@ -2,11 +2,8 @@ name: Publish Package
 
 on:
   push:
-    branches:
-      - master # Change this to your default branch if not 'main'
     tags:
-      - v* # This will run the workflow when a tag starting with 'v' (For e.g 'v1.0.0') is pushed
-
+      - v*
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
