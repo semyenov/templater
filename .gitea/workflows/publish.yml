@@ -17,34 +17,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # This step sets up a Node.js environment. Change to the version you want.
+          node-version: latest
 
-      - name: Cache install files and yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache # Use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          # IMPORTANT: both node_modules and the yarn cache are part of our cache
-          path: |
-            **/node_modules
-            **/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install and configure Yarn Berry
-        run: |
-          corepack enable
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: |
-          if [ "${{ steps.yarn-cache.outputs.cache-hit }}" != "true" ]; then
-            yarn install
-          fi
+        run: yarn install
 
       - name: Build
-        run: yarn build # This assumes you have a "build" script in your package.json file.
+        run: yarn build
 
       - name: Publish
         run: yarn npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # This assumes a GitHub secret named "NPM_TOKEN". Replace with your GitHub secret name that stores your npm token if different.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
