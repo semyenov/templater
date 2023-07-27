@@ -16,15 +16,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-
       - name: Set node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: pnpm
 
-      - run: npx changelogithub
+      - name: Install pnpm
+        run: corepack enable
+
+      - name: Generate changelog
+        run: yarn dlx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
