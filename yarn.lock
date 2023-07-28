@@ -867,7 +867,7 @@ __metadata:
     yaml-eslint-parser: ^1.2.2
     zod: ^3.21.4
   bin:
-    tpl: bin/templater-cli.mjs
+    tpl: bin/tpl.mjs
   languageName: unknown
   linkType: soft
 
