@@ -48,13 +48,13 @@ function formatParams<T extends Record<string, string>>(
     const v = value
 
     replaceMap[k] = v
-    replaceMap[`${k}_dot`] = utils.dotCase(v)
-    replaceMap[`${k}_kebab`] = utils.paramCase(v)
-    replaceMap[`${k}_camel`] = utils.camelCase(v)
-    replaceMap[`${k}_pascal`] = utils.pascalCase(v)
-    replaceMap[`${k}_capital`] = utils.capitalCase(v)
-    replaceMap[`${k}_lower`] = utils.snakeCase(v)
-    replaceMap[`${k}_upper`] = utils.constantCase(v)
+    replaceMap[`${k}-dot`] = utils.dotCase(v)
+    replaceMap[`${k}-kebab`] = utils.paramCase(v)
+    replaceMap[`${k}-camel`] = utils.camelCase(v)
+    replaceMap[`${k}-pascal`] = utils.pascalCase(v)
+    replaceMap[`${k}-capital`] = utils.capitalCase(v)
+    replaceMap[`${k}-lower`] = utils.snakeCase(v)
+    replaceMap[`${k}-upper`] = utils.constantCase(v)
   })
 
   return replaceMap
