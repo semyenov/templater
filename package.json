@@ -38,7 +38,7 @@
     "bin"
   ],
   "bin": {
-    "tpl": "bin/templater-cli.mjs"
+    "tpl": "bin/tpl.mjs"
   },
   "scripts": {
     "dev": "esno src/index.ts",

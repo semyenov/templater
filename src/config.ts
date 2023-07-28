@@ -10,18 +10,17 @@ const ConfigVariableSchema = z.object({
   initialValue: z.string().optional(),
   defaultValue: z.string().optional(),
 })
-export type ConfigVariables = z.infer<typeof ConfigVariableSchema>
-
 export const ConfigFileSchema = z.object({
   name: z.string(),
   content: z.string(),
 })
-export type ConfigFile = z.infer<typeof ConfigFileSchema>
-
 const ConfigSchema = z.object({
   variables: z.array(ConfigVariableSchema),
   files: z.array(ConfigFileSchema),
 })
+
+export type ConfigVariables = z.infer<typeof ConfigVariableSchema>
+export type ConfigFile = z.infer<typeof ConfigFileSchema>
 export type Config = z.infer<typeof ConfigSchema>
 
 export function loadConfig(templatesPath: string) {

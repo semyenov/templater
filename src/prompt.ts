@@ -12,7 +12,7 @@ export class PromptError extends Error {
 }
 
 export class PromptManager {
-  static promptConfirm = async (opts: p.ConfirmOptions): Promise<boolean> => {
+  static async confirm(opts: p.ConfirmOptions): Promise<boolean> {
     const val = await p.confirm(opts)
     if (!p.isCancel(val))
       return val
@@ -20,9 +20,9 @@ export class PromptManager {
     throw new PromptError('Canceled')
   }
 
-  static promptSelect = async (
+  static async select(
     opts: p.SelectOptions<{ value: string; label: string }[], string>,
-  ): Promise<string> => {
+  ): Promise<string> {
     const val = await p.select(opts)
     if (!p.isCancel(val))
       return val
@@ -30,8 +30,8 @@ export class PromptManager {
     throw new PromptError('Canceled')
   }
 
-  static async promptSelectString<T extends string>(strings: T[]): Promise<T> {
-    return this.promptSelect({
+  static async promptTemplate<T extends string>(strings: T[]): Promise<T> {
+    return this.select({
       message: 'Choose template:',
       options: strings.map(template => ({
         label: utils.pathCase(template),
@@ -60,7 +60,7 @@ export class PromptManager {
   static async promptOverwrite(
     file: string,
   ) {
-    return this.promptConfirm({
+    return this.confirm({
       message: `Overwrite ${file}?`,
       initialValue: false,
       active: 'yes',
