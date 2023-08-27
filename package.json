@@ -3,7 +3,7 @@
   "name": "@sozdev/templater",
   "type": "module",
   "version": "0.0.9",
-  "packageManager": "yarn@3.5.1",
+  "packageManager": "yarn@3.6.3",
   "description": "Templater CLI",
   "author": "Alexander Semyenov <semyenov@hotmail.com>",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "build": "rollup --configPlugin typescript --config rollup.config.ts",
     "typecheck": "tsc --noEmit",
     "start": "node --experimental-modules --experimental-import-meta-resolve dist/esm/index.mjs",
-    "schema": "typescript-json-schema --out schema.json --skipLibCheck src/config.ts Config",
+    "schema": "typescript-json-schema --out schema.json --skipLibCheck src/lib/config.ts Config",
     "release": "yarn npm publish",
     "lint": "eslint --ext=ts,js,vue .",
     "clean": "yarn exec rm -rf dist"

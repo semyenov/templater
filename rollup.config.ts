@@ -51,10 +51,12 @@ export default defineConfig([
   {
     input,
     external,
-    output: [{
-      file: pkg.types,
-      format: 'esm',
-    }],
+    output: [
+      {
+        file: pkg.types,
+        format: 'esm',
+      },
+    ],
     plugins: [
       resolve({
         preferBuiltins: true,

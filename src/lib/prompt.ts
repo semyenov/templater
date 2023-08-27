@@ -1,4 +1,5 @@
 import * as p from '@clack/prompts'
+import color from 'picocolors'
 
 import * as utils from './utils'
 
@@ -30,6 +31,16 @@ export class PromptManager {
     throw new PromptError('Canceled')
   }
 
+  static async intro() {
+    p.intro()
+    p.log.info(`${color.bgCyan(color.black(' Project generator '))}`)
+  }
+
+  static async done() {
+    p.log.success(`${color.bgGreen(color.black(' Done '))}`)
+    p.outro()
+  }
+
   static async promptTemplate<T extends string>(strings: T[]): Promise<T> {
     return this.select({
       message: 'Choose template:',
@@ -41,7 +52,9 @@ export class PromptManager {
     }) as Promise<T>
   }
 
-  static async promptVariables<K extends ConfigVariables, T extends K['name']>(variables: K[]) {
+  static async promptVariables<K extends ConfigVariables, T extends K['name']>(
+    variables: K[],
+  ) {
     const variablesPromptsGroup = {} as p.PromptGroup<Record<T, string>>
 
     variables.forEach(async (variable) => {
@@ -57,9 +70,7 @@ export class PromptManager {
     return p.group(variablesPromptsGroup)
   }
 
-  static async promptOverwrite(
-    file: string,
-  ) {
+  static async promptOverwrite(file: string) {
     return this.confirm({
       message: `Overwrite ${file}?`,
       initialValue: false,

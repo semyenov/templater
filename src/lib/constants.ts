@@ -14,4 +14,6 @@ if (fs.existsSync(configFile)) {
 }
 
 export const SRC_ROOT = path.resolve(process.env.TEMPLATER_SRC_ROOT || './src')
-export const TEMPLATES_ROOT = path.resolve(process.env.TEMPLATER_TEMPLATES_ROOT || './templates')
+export const TEMPLATES_ROOT = path.resolve(
+  process.env.TEMPLATER_TEMPLATES_ROOT || './templates',
+)

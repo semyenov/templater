@@ -1,22 +1,6 @@
-import * as glob from 'glob'
+import consola from 'consola'
 
-import { TEMPLATES_ROOT } from './constants'
-import { PromptManager } from './prompt'
-import { loadConfig } from './config'
-import { generate } from './generate'
+import * as lib from './lib'
 
-export async function main() {
-  const templates = await glob.glob(`${TEMPLATES_ROOT}/**/*.yml`, {})
-  const template = await PromptManager.promptTemplate(templates)
-
-  const config = loadConfig(template)
-  const variables = await PromptManager.promptVariables(config.variables)
-
-  for (const file of config.files) {
-    await generate({
-      ...file,
-      template,
-      variables,
-    })
-  }
-}
+const logger = consola.withDefaults({ tag: 'templater' })
+lib.run().catch(logger.error)

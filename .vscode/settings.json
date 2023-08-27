@@ -7,7 +7,6 @@
   "editor.wordWrapColumn": 80,
   "editor.wrappingIndent": "deepIndent",
 
-  // "where-am-i": false,
   "where-am-i.icon": "home",
   "where-am-i.template": "{icon} {project-name}",
   "where-am-i.colorful": true,
