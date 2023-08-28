@@ -3,7 +3,7 @@ import * as fs from 'node:fs'
 import { z } from 'zod'
 import { load } from 'js-yaml'
 
-const ConfigVariableSchema = z.object({
+export const ConfigVariableSchema = z.object({
   name: z.string(),
   message: z.string(),
   placeholder: z.string().optional(),
@@ -14,7 +14,7 @@ export const ConfigFileSchema = z.object({
   name: z.string(),
   content: z.string(),
 })
-const ConfigSchema = z.object({
+export const ConfigSchema = z.object({
   variables: z.array(ConfigVariableSchema),
   files: z.array(ConfigFileSchema),
 })

@@ -1,4 +1,4 @@
-import { glob as glob_1 } from 'glob'
+import { glob } from 'glob'
 import consola from 'consola'
 
 import { PromptManager, TEMPLATES_ROOT, generate, loadConfig } from './lib'
@@ -9,7 +9,7 @@ run().catch(logger.error)
 async function run() {
   PromptManager.intro()
 
-  const templates = await glob_1(`${TEMPLATES_ROOT}/**/*.yml`, {})
+  const templates = await glob(`${TEMPLATES_ROOT}/**/*.yml`, {})
   const template = await PromptManager.promptTemplate(templates)
 
   const config = loadConfig(template)

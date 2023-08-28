@@ -1,5 +1,5 @@
-import * as p from '@clack/prompts'
 import color from 'picocolors'
+import * as p from '@clack/prompts'
 
 import * as utils from './utils'
 
