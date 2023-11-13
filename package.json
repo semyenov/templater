@@ -18,8 +18,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/cjs/index.cjs",
-      "import": "./dist/esm/index.mjs"
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "main": "./dist/cjs/index.cjs",
@@ -33,13 +33,13 @@
       ]
     }
   },
-  "files": [
-    "dist",
-    "bin"
-  ],
   "bin": {
     "tpl": "bin/tpl.mjs"
   },
+  "files": [
+    "bin",
+    "dist"
+  ],
   "scripts": {
     "dev": "esno src/index.ts",
     "build": "rollup --configPlugin typescript --config rollup.config.ts",
@@ -47,8 +47,19 @@
     "start": "node --experimental-modules --experimental-import-meta-resolve dist/esm/index.mjs",
     "schema": "typescript-json-schema --out schema.json --skipLibCheck src/lib/config.ts Config",
     "release": "yarn npm publish",
-    "lint": "eslint -c eslint.config.js ./src/**/*.{ts,js,vue}",
+    "lint": "eslint -c eslint.config.js",
     "clean": "yarn exec rm -rf dist"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "change-case": "^5.1.2",
+    "consola": "^3.2.3",
+    "dotenv": "^16.3.1",
+    "glob": "^10.3.10",
+    "js-yaml": "^4.1.0",
+    "lodash.template": "^4.5.0",
+    "picocolors": "^1.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^1.1.1",
@@ -97,7 +108,7 @@
     "simple-git-hooks": "^2.9.0",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "typescript-json-schema": "^0.62.0",
+    "typescript-json-schema": "0.62.0",
     "vue-eslint-parser": "^9.3.2",
     "yaml-eslint-parser": "^1.2.2"
   },
@@ -105,17 +116,6 @@
     "pre-commit": "yarn lint-staged"
   },
   "lint-staged": {
-    "./src/**/*.{ts,js,vue}": "yarn lint --fix"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.7.0",
-    "change-case": "^5.1.2",
-    "consola": "^3.2.3",
-    "dotenv": "^16.3.1",
-    "glob": "^10.3.10",
-    "js-yaml": "^4.1.0",
-    "lodash.template": "^4.5.0",
-    "picocolors": "^1.0.0",
-    "zod": "^3.22.4"
+    "./src/**/*.{ts,js,yaml,yml,json,vue}": "yarn lint --fix --"
   }
 }

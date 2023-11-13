@@ -891,7 +891,7 @@ __metadata:
     simple-git-hooks: "npm:^2.9.0"
     tslib: "npm:^2.6.2"
     typescript: "npm:^5.2.2"
-    typescript-json-schema: "npm:^0.62.0"
+    typescript-json-schema: "npm:0.62.0"
     vue-eslint-parser: "npm:^9.3.2"
     yaml-eslint-parser: "npm:^1.2.2"
     zod: "npm:^3.22.4"
@@ -5615,7 +5615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-json-schema@npm:^0.62.0":
+"typescript-json-schema@npm:0.62.0":
   version: 0.62.0
   resolution: "typescript-json-schema@npm:0.62.0"
   dependencies:
