@@ -105,7 +105,7 @@
     "pre-commit": "yarn lint-staged"
   },
   "lint-staged": {
-    "*.{ts,js,vue}": "eslint --fix"
+    "./src/**/*.{ts,js,vue}": "yarn lint --fix"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
