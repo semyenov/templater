@@ -67,8 +67,5 @@
       }
     ],
     "scanLimit": 200
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
+  }
 }

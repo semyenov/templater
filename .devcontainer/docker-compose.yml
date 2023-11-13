@@ -3,15 +3,15 @@ version: '3.8'
 services:
   devcontainer:
     image: mcr.microsoft.com/devcontainers/typescript-node:20
-
+    restart: unless-stopped
     command: tail -f /dev/null
-
-    ports:
-      - 3000:3000
 
     environment:
       - NODE_ENV=development
       - PORT=3000
+
+    ports:
+      - 3000:3000
 
     volumes:
       - ../..:/workspaces:cached
@@ -19,12 +19,15 @@ services:
   redis:
     image: redis:latest
     restart: unless-stopped
-    ports:
-      - 6379:6379
-    volumes:
-      - redis-data:/data
+
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+
+    ports:
+      - 6379:6379
+
+    volumes:
+      - redis-data:/data
 
 volumes:
   redis-data:
