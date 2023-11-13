@@ -1,15 +1,11 @@
 import * as antfu from '@antfu/eslint-config'
 
 const config = antfu.antfu({
-  /* settings: {
-    'import/resolver': {
-      typescript: true,
-      node: true,
-    },
-  }, */
-
   rules: {
+    'antfu/generic-spacing': ['error'],
     'antfu/if-newline': ['error'],
+    'style/max-statements-per-line': ['off'],
+    'eol-last': ['error', 'always'],
 
     'import/order': [
       'error',

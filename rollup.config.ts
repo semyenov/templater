@@ -29,6 +29,7 @@ export default defineConfig([
     ],
     output: {
       file: 'eslint.config.js',
+      sourcemap: true,
       format: 'esm',
     },
     plugins: [
@@ -49,14 +50,14 @@ export default defineConfig([
     output: [
       {
         file: pkg.main,
-        format: 'cjs',
         sourcemap: true,
+        format: 'cjs',
         banner,
       },
       {
         file: pkg.module,
-        format: 'esm',
         sourcemap: true,
+        format: 'esm',
         banner,
       },
     ],
@@ -78,6 +79,7 @@ export default defineConfig([
     output: [
       {
         file: pkg.types,
+        sourcemap: true,
         format: 'esm',
       },
     ],
