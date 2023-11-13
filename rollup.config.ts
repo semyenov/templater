@@ -1,6 +1,9 @@
+import process from 'node:process'
+
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
+import sucrase from '@rollup/plugin-sucrase'
 import { defineConfig } from 'rollup'
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
@@ -9,6 +12,7 @@ import pkg from './package.json' assert { type: 'json' }
 
 const input = 'src/index.ts'
 const moduleName = pkg.name.replace(/^@.*\//, '')
+const production = process.env.NODE_ENV === 'production'
 const external = Object.keys(pkg.dependencies)
 const author = pkg.author
 const banner = `/**
@@ -19,31 +23,6 @@ const banner = `/**
   */`
 
 export default defineConfig([
-  {
-    input: './eslint.config.ts',
-    external: [
-      'eslint',
-      '@antfu/eslint-config',
-      '@typescript-eslint/parser',
-      'vue-eslint-parser',
-    ],
-    output: {
-      file: 'eslint.config.js',
-      sourcemap: true,
-      format: 'esm',
-    },
-    plugins: [
-      json(),
-      resolve({
-        preferBuiltins: true,
-      }),
-      commonjs(),
-      esbuild({
-        tsconfig: './tsconfig.build.json',
-        minify: true,
-      }),
-    ],
-  },
   {
     input,
     external,
@@ -65,11 +44,20 @@ export default defineConfig([
       json(),
       resolve({
         preferBuiltins: true,
+        rootDir: 'src',
+        jail: 'src',
       }),
-      commonjs(),
+      commonjs({
+        transformMixedEsModules: true,
+      }),
       esbuild({
         tsconfig: './tsconfig.build.json',
         minify: true,
+      }),
+      sucrase({
+        exclude: ['node_modules/**'],
+        transforms: ['typescript'],
+        production,
       }),
     ],
   },
@@ -86,6 +74,13 @@ export default defineConfig([
     plugins: [
       resolve({
         preferBuiltins: true,
+        rootDir: 'src',
+        jail: 'src',
+      }),
+      sucrase({
+        exclude: ['node_modules/**'],
+        transforms: ['typescript'],
+        production,
       }),
       dts({
         tsconfig: './tsconfig.build.json',
