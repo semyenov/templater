@@ -50,14 +50,15 @@ export default defineConfig([
       commonjs({
         transformMixedEsModules: true,
       }),
-      esbuild({
-        tsconfig: './tsconfig.build.json',
-        minify: true,
-      }),
       sucrase({
+        include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['node_modules/**'],
         transforms: ['typescript'],
         production,
+      }),
+      esbuild({
+        tsconfig: './tsconfig.build.json',
+        minify: true,
       }),
     ],
   },
@@ -78,6 +79,7 @@ export default defineConfig([
         jail: 'src',
       }),
       sucrase({
+        include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['node_modules/**'],
         transforms: ['typescript'],
         production,
