@@ -1,39 +1,22 @@
-import antfu from '@antfu/eslint-config'
-import * as typescriptParser from '@typescript-eslint/parser'
-import * as vueParser from 'vue-eslint-parser'
+import * as antfu from '@antfu/eslint-config'
 
-const config = antfu({
-  linterOptions: {
-    reportUnusedDisableDirectives: true,
-  },
-  ignores: ['**/dist', '**/node_modules', '**/*.config.ts'],
-  languageOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    parser: vueParser,
-    parserOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      parser: typescriptParser,
-      project: './tsconfig.eslint.json',
-    },
-  },
-  settings: {
+const config = antfu.antfu({
+  /* settings: {
     'import/resolver': {
       typescript: true,
       node: true,
     },
-  },
+  }, */
+
   rules: {
     'antfu/if-newline': ['error'],
-    'import/namespace': ['error'],
-    'import/default': ['error'],
-    'import/export': ['error'],
-    'import/named': ['error'],
+
     'import/order': [
       'error',
       {
         'newlines-between': 'always',
+        'distinctGroup': true,
+
         'groups': [
           'builtin',
           'external',
@@ -44,6 +27,7 @@ const config = antfu({
           'index',
           'type',
         ],
+
         'pathGroups': [
           {
             pattern: '@/**',
@@ -56,11 +40,11 @@ const config = antfu({
             position: 'after',
           },
         ],
-        'distinctGroup': true,
+
         'alphabetize': {
           order: 'asc',
           orderImportKind: 'asc',
-          caseInsensitive: true,
+          caseInsensitive: false,
         },
       },
     ],

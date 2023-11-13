@@ -21,7 +21,12 @@ const banner = `/**
 export default defineConfig([
   {
     input: './eslint.config.ts',
-    external: ['eslint', '@antfu/eslint-config', '@typescript-eslint/parser', 'vue-eslint-parser'],
+    external: [
+      'eslint',
+      '@antfu/eslint-config',
+      '@typescript-eslint/parser',
+      'vue-eslint-parser',
+    ],
     output: {
       file: 'eslint.config.js',
       format: 'esm',
