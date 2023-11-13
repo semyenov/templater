@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@sozdev/eslint-config",
   "type": "module",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "packageManager": "yarn@4.0.1",
   "description": "Eslint-config CLI",
   "author": "Alexander Semyenov <semyenov@hotmail.com>",
