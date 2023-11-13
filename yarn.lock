@@ -833,6 +833,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sozdev/eslint-config@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@sozdev/eslint-config@npm:0.0.11"
+  dependencies:
+    "@antfu/eslint-config": "npm:^1.1.1"
+    consola: "npm:^3.2.3"
+  checksum: 4117675c04b7e27c15c723f68331e634b1d090e24d9f1c8d1b834f1bd2af67e035f01fd2bdea21ab62ea87340708371518700ef49a8314c64d4fcc0386687956
+  languageName: node
+  linkType: hard
+
 "@sozdev/templater@workspace:.":
   version: 0.0.0-use.local
   resolution: "@sozdev/templater@workspace:."
@@ -847,6 +857,7 @@ __metadata:
     "@rollup/plugin-json": "npm:^6.0.1"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.5"
+    "@sozdev/eslint-config": "npm:^0.0.11"
     "@types/eslint": "npm:^8.44.7"
     "@types/eslint__eslintrc": "npm:^2"
     "@types/esm": "npm:^3.2.2"

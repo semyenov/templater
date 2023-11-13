@@ -3,9 +3,9 @@ import path from 'node:path'
 
 import lt from 'lodash.template'
 
-import { SRC_ROOT } from './constants'
+import * as constants from './constants'
 import { PromptManager } from './prompt'
-import { camelCase, capitalCase, constantCase, dotCase, pascalCase, pathCase, snakeCase } from './utils'
+import * as utils from './utils'
 
 export interface Params {
   template: string
@@ -21,8 +21,8 @@ export async function generate(params: Params): Promise<void> {
   const replaceMap = formatParams(params.variables)
 
   const name = path.join(
-    SRC_ROOT,
-    pathCase(params.template),
+    constants.SRC_ROOT,
+    utils.pathCase(params.template),
     nameTemplater(replaceMap),
   )
 
@@ -46,16 +46,16 @@ function formatParams<T extends Record<string, string>>(
   const replaceMap: Record<string, string> = {}
 
   Object.entries(params).forEach(([key, value]) => {
-    const k = constantCase(key)
+    const k = utils.constantCase(key)
     const v = value
 
     replaceMap[k] = v
-    replaceMap[`${k}_dot`] = dotCase(v)
-    replaceMap[`${k}_camel`] = camelCase(v)
-    replaceMap[`${k}_pascal`] = pascalCase(v)
-    replaceMap[`${k}_capital`] = capitalCase(v)
-    replaceMap[`${k}_lower`] = snakeCase(v)
-    replaceMap[`${k}_upper`] = constantCase(v)
+    replaceMap[`${k}_dot`] = utils.dotCase(v)
+    replaceMap[`${k}_camel`] = utils.camelCase(v)
+    replaceMap[`${k}_pascal`] = utils.pascalCase(v)
+    replaceMap[`${k}_capital`] = utils.capitalCase(v)
+    replaceMap[`${k}_lower`] = utils.snakeCase(v)
+    replaceMap[`${k}_upper`] = utils.constantCase(v)
   })
 
   return replaceMap

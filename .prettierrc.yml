@@ -1,5 +1,5 @@
 # .prettierrc or .prettierrc.yaml
-trailingComma: 'all'
+trailingComma: all
 singleQuote: true
 semi: false
 tabWidth: 2
