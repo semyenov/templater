@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 
-import { z } from 'zod'
 import { load } from 'js-yaml'
+import { z } from 'zod'
 
 export const ConfigVariableSchema = z.object({
   name: z.string(),

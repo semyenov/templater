@@ -1,5 +1,5 @@
-import { glob } from 'glob'
 import consola from 'consola'
+import { glob } from 'glob'
 
 import { PromptManager, TEMPLATES_ROOT, generate, loadConfig } from './lib'
 

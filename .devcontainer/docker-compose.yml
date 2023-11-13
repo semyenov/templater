@@ -1,11 +1,21 @@
 version: '3.8'
 services:
   devcontainer:
-    image: mcr.microsoft.com/devcontainers/base:alpine
+    image: gitea.local/sozdev/devcontainer-ts
     volumes:
       - ../..:/workspaces:cached
     network_mode: service:db
     command: sleep infinity
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 
   db:
     image: postgres:latest
@@ -19,3 +29,4 @@ services:
 
 volumes:
   postgres-data:
+  redis-data:

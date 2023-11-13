@@ -1,3 +1,5 @@
+$schema: '../schema.json'
+
 variables:
   - name: 'NAME'
     message: 'Enter model name:'
@@ -10,6 +12,11 @@ variables:
     defaultValue: ''
 
 files:
+  - name: '<%- NAME_lower %>/index.ts'
+    content: |
+      export * from './<%- NAME_dot %>.ts'
+      export * from './<%- NAME_dot %>.zod.ts'
+
   - name: '<%- NAME_lower %>/<%- NAME_dot %>.ts'
     content: |
       // <%- COMMENT %>
@@ -33,6 +40,10 @@ files:
         I<%- NAME_capital %>MongooseSchema,
       )
 
-  - name: '<%- NAME_lower %>/<%- NAME_capital %>.d.ts'
+  - name: '<%- NAME_lower %>/<%- NAME_dot %>.zod.ts'
     content: |
-      import { I<%- NAME_capital %> } from '~/types'
+      import { z } from 'zod'
+
+      export const I<%- NAME_capital %>Schema = z.object({
+        // TODO: write zod schema options
+      })
