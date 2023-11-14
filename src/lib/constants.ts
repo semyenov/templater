@@ -1,5 +1,4 @@
 import * as fs from 'node:fs'
-import path from 'node:path'
 import process from 'node:process'
 
 import dotenv from 'dotenv'
@@ -13,7 +12,5 @@ if (fs.existsSync(configFile)) {
     throw result.error
 }
 
-export const SRC_ROOT = path.resolve(process.env.TEMPLATER_SRC_ROOT || './src')
-export const TEMPLATES_ROOT = path.resolve(
-  process.env.TEMPLATER_TEMPLATES_ROOT || './templates',
-)
+export const SRC_ROOT = process.env.TEMPLATER_SRC_ROOT || './src'
+export const TEMPLATES_ROOT = process.env.TEMPLATER_TEMPLATES_ROOT || './templates'

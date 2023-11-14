@@ -1,10 +1,10 @@
 {
   "extends": "./tsconfig.json",
-
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "./"
   },
-
-  "include": ["/**/*.{ts,js,yaml,yml,json,md,mdc,vue}"]
+  "include": [
+    "/**/*.{ts,js,yaml,yml,json,md,mdc,vue}"
+  ]
 }
