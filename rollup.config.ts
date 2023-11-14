@@ -1,4 +1,4 @@
-import { readFileSync} from 'node:fs'
+import { readFileSync } from 'node:fs'
 
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
