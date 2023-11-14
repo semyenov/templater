@@ -1,3 +1,5 @@
+import { readFileSync} from 'node:fs'
+
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
@@ -5,18 +7,44 @@ import { defineConfig } from 'rollup'
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
 
-import pkg from './package.json' assert { type: 'json' }
+import type { RollupCommonJSOptions } from '@rollup/plugin-commonjs'
+import type { RollupNodeResolveOptions } from '@rollup/plugin-node-resolve'
+import type { Options as RollupDtsOptions } from 'rollup-plugin-dts'
+import type { Options as RollupEsbuildOptions } from 'rollup-plugin-esbuild'
+
+const pkgFile = readFileSync('./package.json', { encoding: 'utf-8' })
+const pkgJson: typeof import('./package.json') = JSON.parse(pkgFile)
 
 const input = 'src/index.ts'
-const moduleName = pkg.name.replace(/^@.*\//, '')
-const external = Object.keys(pkg.dependencies)
-const author = pkg.author
+const tsconfig = './tsconfig.build.json'
+const moduleName = pkgJson.name.replace(/^@.*\//, '')
+const external = Object.keys(pkgJson.dependencies)
+const author = pkgJson.author
 const banner = `/**
   * @license
   * author: ${author}
-  * ${moduleName} v${pkg.version}
-  * Released under the ${pkg.license} license.
+  * ${moduleName} v${pkgJson.version}
+  * Released under the ${pkgJson.license} license.
   */`
+
+const resolveConfig: RollupNodeResolveOptions = {
+  preferBuiltins: true,
+}
+
+const commonjsConfig: RollupCommonJSOptions = {
+  exclude: external,
+}
+
+const esbuildConfig: RollupEsbuildOptions = {
+  exclude: external,
+  minify: true,
+  tsconfig,
+}
+
+const dtsConfig: RollupDtsOptions = {
+  respectExternal: true,
+  tsconfig,
+}
 
 export default defineConfig([
   {
@@ -24,13 +52,13 @@ export default defineConfig([
     external,
     output: [
       {
-        file: pkg.main,
+        file: pkgJson.main,
         sourcemap: true,
         format: 'cjs',
         banner,
       },
       {
-        file: pkg.module,
+        file: pkgJson.module,
         sourcemap: true,
         format: 'esm',
         banner,
@@ -38,14 +66,9 @@ export default defineConfig([
     ],
     plugins: [
       json(),
-      resolve({
-        preferBuiltins: true,
-      }),
-      commonjs(),
-      esbuild({
-        tsconfig: './tsconfig.build.json',
-        minify: true,
-      }),
+      resolve(resolveConfig),
+      commonjs(commonjsConfig),
+      esbuild(esbuildConfig),
     ],
   },
   {
@@ -53,19 +76,15 @@ export default defineConfig([
     external,
     output: [
       {
-        file: pkg.types,
+        file: pkgJson.types,
         sourcemap: true,
         format: 'esm',
+        banner,
       },
     ],
     plugins: [
-      resolve({
-        preferBuiltins: true,
-      }),
-      dts({
-        tsconfig: './tsconfig.build.json',
-        respectExternal: true,
-      }),
+      resolve(resolveConfig),
+      dts(dtsConfig),
     ],
   },
 ])
