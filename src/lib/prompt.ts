@@ -6,7 +6,7 @@ import { pathCase } from './utils'
 import type { ConfigVariables } from './config'
 import type { ConfirmOptions, PromptGroup, SelectOptions } from '@clack/prompts'
 
-export class PromptError extends Error {
+export class PromptManagerError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'PromptError'
@@ -19,7 +19,7 @@ export class PromptManager {
     if (!prompts.isCancel(val))
       return val
 
-    throw new PromptError('Canceled')
+    throw new PromptManagerError('Canceled')
   }
 
   static async select(
@@ -29,27 +29,27 @@ export class PromptManager {
     if (!prompts.isCancel(val))
       return val
 
-    throw new PromptError('Canceled')
+    throw new PromptManagerError('Canceled')
   }
 
-  static async intro() {
+  static async intro(str: string) {
     prompts.intro()
-    prompts.log.info(`${color.bgCyan(color.black(' Project generator '))}`)
+    prompts.log.info(`${color.bgCyan(color.black(str))}`)
   }
 
-  static async done() {
-    prompts.log.success(`${color.bgGreen(color.black(' Done '))}`)
+  static async done(str: string) {
+    prompts.log.success(`${color.bgGreen(color.black(str))}`)
     prompts.outro()
   }
 
-  static async promptTemplate<T extends string>(strings: T[]): Promise<T> {
+  static async promptTemplate<T extends string>(templates: T[]): Promise<T> {
     return this.select({
       message: 'Choose template:',
-      options: strings.map(template => ({
+      options: templates.map(template => ({
         label: pathCase(template),
         value: template,
       })),
-      initialValue: strings[0],
+      initialValue: templates[0],
     }) as Promise<T>
   }
 
@@ -64,7 +64,7 @@ export class PromptManager {
         if (!prompts.isCancel(val))
           return val
 
-        throw new PromptError('Canceled')
+        throw new PromptManagerError('Canceled')
       }
     })
 

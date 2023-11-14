@@ -13,18 +13,19 @@ import type { Options as RollupDtsOptions } from 'rollup-plugin-dts'
 import type { Options as RollupEsbuildOptions } from 'rollup-plugin-esbuild'
 
 const pkgFile = readFileSync('./package.json', { encoding: 'utf-8' })
-const pkgJson: typeof import('./package.json') = JSON.parse(pkgFile)
+const pkgData: typeof import('./package.json') = JSON.parse(pkgFile)
 
-const input = 'src/index.ts'
+const input = './src/index.ts'
 const tsconfig = './tsconfig.build.json'
-const moduleName = pkgJson.name.replace(/^@.*\//, '')
-const external = Object.keys(pkgJson.dependencies)
-const author = pkgJson.author
+const moduleName = pkgData.name.replace(/^@.*\//, '')
+const external = Object.keys(pkgData.dependencies)
+
+const author = pkgData.author
 const banner = `/**
   * @license
   * author: ${author}
-  * ${moduleName} v${pkgJson.version}
-  * Released under the ${pkgJson.license} license.
+  * ${moduleName} v${pkgData.version}
+  * Released under the ${pkgData.license} license.
   */`
 
 const resolveConfig: RollupNodeResolveOptions = {
@@ -52,13 +53,13 @@ export default defineConfig([
     external,
     output: [
       {
-        file: pkgJson.main,
+        file: pkgData.main,
         sourcemap: true,
         format: 'cjs',
         banner,
       },
       {
-        file: pkgJson.module,
+        file: pkgData.module,
         sourcemap: true,
         format: 'esm',
         banner,
@@ -76,7 +77,7 @@ export default defineConfig([
     external,
     output: [
       {
-        file: pkgJson.types,
+        file: pkgData.types,
         sourcemap: true,
         format: 'esm',
         banner,

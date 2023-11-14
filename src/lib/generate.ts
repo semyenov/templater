@@ -20,9 +20,9 @@ export async function generate(params: Params): Promise<void> {
 
   const replaceMap = formatParams(params.variables)
 
-  const name = path.join(
+  const name = path.resolve(
     constants.SRC_ROOT,
-    utils.pathCase(params.template),
+    utils.pathCase(path.basename(params.template, '.yml')),
     nameTemplater(replaceMap),
   )
 

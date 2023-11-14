@@ -1,7 +1,10 @@
 import * as fs from 'node:fs'
+import nodePath from 'node:path'
 
 import { load } from 'js-yaml'
 import { z } from 'zod'
+
+import { TEMPLATES_ROOT } from './constants'
 
 export const ConfigVariableSchema = z.object({
   name: z.string(),
@@ -23,8 +26,11 @@ export type ConfigVariables = z.infer<typeof ConfigVariableSchema>
 export type ConfigFile = z.infer<typeof ConfigFileSchema>
 export type Config = z.infer<typeof ConfigSchema>
 
-export function loadConfig(templatesPath: string) {
-  const fileContent = fs.readFileSync(templatesPath, 'utf-8')
+export function loadConfig(template: string) {
+  const fileContent = fs.readFileSync(
+    nodePath.resolve(TEMPLATES_ROOT, template),
+    'utf-8',
+  )
   const yamlData = load(fileContent)
   const parsedData = ConfigSchema.parse(yamlData)
   return parsedData
