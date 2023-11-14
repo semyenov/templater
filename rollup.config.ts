@@ -8,6 +8,7 @@ import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
 
 import type { RollupCommonJSOptions } from '@rollup/plugin-commonjs'
+import type { RollupJsonOptions } from '@rollup/plugin-json'
 import type { RollupNodeResolveOptions } from '@rollup/plugin-node-resolve'
 import type { Options as RollupDtsOptions } from 'rollup-plugin-dts'
 import type { Options as RollupEsbuildOptions } from 'rollup-plugin-esbuild'
@@ -27,6 +28,11 @@ const banner = `/**
   * ${moduleName} v${pkgData.version}
   * Released under the ${pkgData.license} license.
   */`
+
+const jsonConfig: RollupJsonOptions = {
+  preferConst: true,
+  indent: '  ',
+}
 
 const resolveConfig: RollupNodeResolveOptions = {
   preferBuiltins: true,
@@ -66,7 +72,7 @@ export default defineConfig([
       },
     ],
     plugins: [
-      json(),
+      json(jsonConfig),
       resolve(resolveConfig),
       commonjs(commonjsConfig),
       esbuild(esbuildConfig),
@@ -84,6 +90,7 @@ export default defineConfig([
       },
     ],
     plugins: [
+      json(jsonConfig),
       resolve(resolveConfig),
       dts(dtsConfig),
     ],
